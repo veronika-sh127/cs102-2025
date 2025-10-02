@@ -1,6 +1,6 @@
 """Это докстринг модуля"""
 
-MESSAGE = "Hello, World!"
+MESSAGE = "message"
 
 
 def text():
