@@ -1,2 +1,10 @@
+"""Это докстринг модуля"""
+
+MESSAGE = "Hello, World!"
+
+
 def text():
-    return message
+    """ "Это многострочный докстринг
+
+    он описывает работу функции"""
+    return MESSAGE
