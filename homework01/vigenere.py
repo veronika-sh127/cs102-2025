@@ -19,12 +19,11 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
                 base = ord("a")
             shift = ord(keyword[index % len(keyword)]) - base
             ciphertext += chr((ord(char) - base + shift) % alf + base)
-            index +=1
+            index += 1
         else:
             ciphertext += char
-            index +=1
+            index += 1
     return ciphertext
-
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
@@ -53,4 +52,5 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
             index += 1
     return plaintext
 
-print(encrypt_vigenere( 'introduction to python', 'lsci'))
+
+print(encrypt_vigenere("introduction to python", "lsci"))

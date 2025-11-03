@@ -18,9 +18,6 @@ def is_prime(n: int) -> bool:
         if n % i == 0:
             return False
     return True
-    pass
-
-print(is_prime(48))
 
 
 def gcd(a: int, b: int) -> int:
@@ -34,9 +31,7 @@ def gcd(a: int, b: int) -> int:
     while b != 0:
         a, b = b, a % b
     return a
-    pass
 
-print(gcd(12, 15))
 
 def multiplicative_inverse(e: int, phi: int) -> int:
     """
@@ -45,11 +40,28 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    pass
+
+    def extended_gcd(a: int, b: int) -> tp.Tuple[int, int, int]:
+        '''
+        Euclid's extended algorithm
+        '''
+        if a == 0:
+            return b, 0, 1
+        gcd, x1, y1 = extended_gcd(b % a, a)
+        x = y1 - (b // a) * x1
+        y = x1
+        return gcd, x, y
+
+    gcd, x, y = extended_gcd(e, phi)
+    if gcd != 1:
+        return False
+    return x % phi
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
+    '''
+    Generate a public and private keypair.
+    '''
     if not (is_prime(p) and is_prime(q)):
         raise ValueError("Both numbers must be prime.")
     elif p == q:
@@ -77,7 +89,7 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
     # Public key is (e, n) and private key is (d, n)
     return ((e, n), (d, n))
 
-'''
+
 def encrypt(pk: tp.Tuple[int, int], plaintext: str) -> tp.List[int]:
     # Unpack the key into it's components
     key, n = pk
@@ -92,7 +104,7 @@ def decrypt(pk: tp.Tuple[int, int], ciphertext: tp.List[int]) -> str:
     # Unpack the key into its components
     key, n = pk
     # Generate the plaintext based on the ciphertext and key using a^b mod m
-    plain = [chr((char ** key) % n) for char in ciphertext]
+    plain = [chr((char**key) % n) for char in ciphertext]
     # Return the array of bytes as a string
     return "".join(plain)
 
@@ -111,4 +123,3 @@ if __name__ == "__main__":
     print("Decrypting message with public key ", public, " . . .")
     print("Your message is:")
     print(decrypt(public, encrypted_msg))
-'''
