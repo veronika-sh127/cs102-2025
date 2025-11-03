@@ -10,18 +10,19 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     """
     ciphertext = ""
     index = 0
+    alf = 26
     for char in plaintext:
         if char.isalpha():
             if char.isupper():
                 base = ord("A")
-                shift = ord(keyword[index % len(keyword)]) - base
             else:
                 base = ord("a")
-                shift = ord(keyword[index % len(keyword)]) - base
-            ciphertext += chr((ord(char) - base + shift) % 26 + base)
+            shift = ord(keyword[index % len(keyword)]) - base
+            ciphertext += chr((ord(char) - base + shift) % alf + base)
             index +=1
         else:
             ciphertext += char
+            index +=1
     return ciphertext
 
 
@@ -42,14 +43,14 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         if char.isalpha():
             if char.isupper():
                 base = ord("A")
-                shift = ord(keyword[index % len(keyword)]) - base
             else:
                 base = ord("a")
-                shift = ord(keyword[index % len(keyword)]) - base
+            shift = ord(keyword[index % len(keyword)]) - base
             plaintext += chr((ord(char) - base - shift) % 26 + base)
             index += 1
         else:
             plaintext += char
+            index += 1
     return plaintext
 
-print(decrypt_vigenere('LXFOPVEFRNHR', "LEMON"))
+print(encrypt_vigenere( 'introduction to python', 'lsci'))
