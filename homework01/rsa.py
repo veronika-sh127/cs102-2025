@@ -40,22 +40,22 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
+    # b * x + a * y = НОД(b, a)  берем по модулю a
+    # (b * x) % a = 1
+    # x = d
 
-    def extended_gcd(a: int, b: int) -> tp.Tuple[int, int, int]:
-        """
-        Euclid's extended algorithm
-        """
-        if a == 0:
-            return b, 0, 1
-        gcd, x1, y1 = extended_gcd(b % a, a)
-        x = y1 - (b // a) * x1
-        y = x1
-        return gcd, x, y
+    a, b = phi, e
+    x0, x1 = 0, 1
 
-    gcd, x, y = extended_gcd(e, phi)
-    if gcd != 1:
-        return False
-    return x % phi
+    while b != 0:
+        q = a // b
+        a, b = b, a % b
+        x0, x1 = x1, x0 - q * x1
+
+    if a != 1:
+        raise ValueError(f"Числа {e} и {phi} не взаимно простые")
+
+    return x0 % phi
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
