@@ -19,6 +19,20 @@ def remove_wall(
     :return:
     """
 
+    x, y = coord
+    directions = choice("up", "right")
+    if directions == "up":
+        if x - 2 > 0:
+            grid[x - 1][y] = " "
+        else:
+            grid[x][y + 1] = " "
+    else:
+        if y + 2 < len(grid[0]) - 1:
+            grid[x][y + 1] = " "
+        else:
+            grid[x - 1][y] = " "
+    return grid
+
 
 def bin_tree_maze(
     rows: int = 15, cols: int = 15, random_exit: bool = True
