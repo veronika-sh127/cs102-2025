@@ -52,7 +52,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    return list(grid[pos[0]])
+    return grid[pos[0]]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -64,7 +64,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    return [stolb[pos[1]] for stolb in grid]
+    return [row[pos[1]] for row in grid]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -131,7 +131,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     [['5', '3', '4', '6',..]]
     """
     pos = find_empty_positions(grid)
-    if pos is None:
+    if not pos:
         return grid
     for value in find_possible_values(grid, pos):
         grid[pos[0]][pos[1]] = value
@@ -184,17 +184,16 @@ def generate_sudoku(n: int) -> tp.List[tp.List[str]]:
     if not solution:
         raise ValueError("Не удалось сгенерировать решение")
 
-    puzzle = [row[:] for row in solution]
     empty_count = 81 - n
     if empty_count <= 0:
-        return puzzle
+        return solution
     cells = [(i, j) for i in range(9) for j in range(9)]
     random.shuffle(cells)
     for k in range(empty_count):
         i, j = cells[k]
-        puzzle[i][j] = "."
+        solution[i][j] = "."
 
-    return puzzle
+    return solution
 
 
 if __name__ == "__main__":

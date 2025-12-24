@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".mypy_cache"
+		},
+		{
+			"path": "__pycache__"
+		},
+		{
+			"path": "tests"
+		}
+	]
+}
