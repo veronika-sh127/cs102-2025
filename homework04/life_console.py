@@ -9,12 +9,12 @@ class Console(UI):
         super().__init__(life)
 
     def draw_borders(self, screen) -> None:
-        """ Отобразить рамку. """
+        """Отобразить рамку."""
         rows, cols = self.life.rows, self.life.cols
         screen.border()
 
     def draw_grid(self, screen) -> None:
-        """ Отобразить состояние клеток. """
+        """Отобразить состояние клеток."""
         rows, cols = self.life.rows, self.life.cols
 
         for y in range(rows):
@@ -26,7 +26,7 @@ class Console(UI):
     def run(self) -> None:
         screen = curses.initscr()
         curses.curs_set(0)
-        screen.nodelay(True) 
+        screen.nodelay(True)
         screen.keypad(True)
 
         try:
@@ -39,7 +39,7 @@ class Console(UI):
                 self.life.step()
 
                 ch = screen.getch()
-                if ch in (27, ord('q')):
+                if ch in (27, ord("q")):
                     break
                 if self.life.is_max_generations_exceeded or not self.life.is_changing:
                     break
@@ -47,4 +47,3 @@ class Console(UI):
                 curses.napms(100)
         finally:
             curses.endwin()
-
