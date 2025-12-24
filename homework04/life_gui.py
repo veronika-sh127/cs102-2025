@@ -1,7 +1,6 @@
 import pygame
-from pygame.locals import QUIT
-
 from life import GameOfLife
+from pygame.locals import QUIT
 from ui import UI
 
 
