@@ -27,22 +27,22 @@ def draw_maze(grid: List[List[str | int]], size: int = 10):
 
 def show_solution():
     global GRID, N, M
-    maze, path = solve_maze(GRID)
-    maze = add_path_to_grid(GRID, path)
+    GRID = bin_tree_maze(N, M, random_exit=False)
+    solved_grid, path = solve_maze(GRID)
+
     if path:
-        draw_maze(maze, CELL_SIZE)
+        maze_with_path = add_path_to_grid(GRID, path)
+        draw_maze(maze_with_path, CELL_SIZE)
     else:
-        GRID = bin_tree_maze(N, M)
-        maze, path = solve_maze(GRID)
-        draw_maze(maze, CELL_SIZE)
+        messagebox.showerror("Ошибка", "Не удалось найти путь!")
 
 
 if __name__ == "__main__":
-    global GRID, CELL_SIZE
+    global GRID, CELL_SIZE, canvas
     N, M = 51, 77
 
     CELL_SIZE = 10
-    GRID = bin_tree_maze(N, M)
+    GRID = bin_tree_maze(N, M, random_exit=False)
 
     window = tk.Tk()
     window.title("Maze")

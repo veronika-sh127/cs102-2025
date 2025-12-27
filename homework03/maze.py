@@ -17,19 +17,19 @@ def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> Li
     :return:
     """
 
-    x, y = coord
-    x_removed, y_removed = x, y
+    curr_x, curr_y = coord
+    x_removed, y_removed = curr_x, curr_y
     direction = choice(("up", "right"))
     cols = len(grid[0])
-    if direction == "up" and x - 2 >= 0:
-        x_removed, y_removed = x - 1, y
+    if direction == "up" and curr_x - 2 >= 0:
+        x_removed, y_removed = curr_x - 1, curr_y
     else:
         direction = "right"
 
-    if direction == "right" and y + 1 < cols - 1:
-        x_removed, y_removed = x, y + 1
-    elif x - 2 >= 0:
-        x_removed, y_removed = x - 1, y
+    if direction == "right" and curr_y + 1 < cols - 1:
+        x_removed, y_removed = curr_x, curr_y + 1
+    elif curr_x - 2 >= 0:
+        x_removed, y_removed = curr_x - 1, curr_y
     grid[x_removed][y_removed] = " "
 
     return grid
@@ -46,11 +46,11 @@ def bin_tree_maze(rows: int = 15, cols: int = 15, random_exit: bool = True) -> L
 
     grid = create_grid(rows, cols)
     empty_cells = []
-    for x, row in enumerate(grid):
-        for y, _ in enumerate(row):
-            if x % 2 == 1 and y % 2 == 1:
-                grid[x][y] = " "
-                empty_cells.append((x, y))
+    for row_idx, row in enumerate(grid):
+        for col_idx, _ in enumerate(row):
+            if row_idx % 2 == 1 and col_idx % 2 == 1:
+                grid[row_idx][col_idx] = " "
+                empty_cells.append((row_idx, col_idx))
 
     for coord in empty_cells:
         remove_wall(grid, coord)
@@ -76,10 +76,10 @@ def get_exits(grid: List[List[Union[str, int]]]) -> List[Tuple[int, int]]:
     """
 
     exits = []
-    for x, row in enumerate(grid):
-        for y, _ in enumerate(row):
-            if grid[x][y] == "X":
-                exits.append((x, y))
+    for row_idx, row in enumerate(grid):
+        for col_idx, _ in enumerate(row):
+            if grid[row_idx][col_idx] == "X":
+                exits.append((row_idx, col_idx))
     return exits
 
 
@@ -91,14 +91,19 @@ def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str,
     :return:
     """
 
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
-            if grid[x][y] == k:
-                neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
-                for nx, ny in neighbors:
-                    if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
-                        if grid[nx][ny] == 0:
-                            grid[nx][ny] = k + 1
+    for row_idx, row in enumerate(grid):
+        for col_idx, _ in enumerate(row):
+            if grid[row_idx][col_idx] == k:
+                neighbors = [
+                    (row_idx + 1, col_idx),
+                    (row_idx - 1, col_idx),
+                    (row_idx, col_idx + 1),
+                    (row_idx, col_idx - 1),
+                ]
+                for neighbor_x, neighbor_y in neighbors:
+                    if 0 <= neighbor_x < len(grid) and 0 <= neighbor_y < len(row):
+                        if grid[neighbor_x][neighbor_y] == 0:
+                            grid[neighbor_x][neighbor_y] = k + 1
 
     return grid
 
@@ -120,12 +125,12 @@ def shortest_path(
         neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
         found = False
 
-        for nx, ny in neighbors:
-            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
-                if grid[nx][ny] == k - 1:
+        for neighbor_x, neighbor_y in neighbors:
+            if 0 <= neighbor_x < len(grid) and 0 <= neighbor_y < len(grid[0]):
+                if grid[neighbor_x][neighbor_y] == k - 1:
                     k -= 1
-                    path.append((nx, ny))
-                    x, y = nx, ny
+                    path.append((neighbor_x, neighbor_y))
+                    x, y = neighbor_x, neighbor_y
                     found = True
                     break
 
@@ -163,8 +168,8 @@ def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) ->
     if y < cols - 1:
         neighbors.append((x, y + 1))
 
-    for nx, ny in neighbors:
-        if grid[nx][ny] == " ":
+    for neighbor_x, neighbor_y in neighbors:
+        if grid[neighbor_x][neighbor_y] == " ":
             return False
 
     return True
@@ -190,26 +195,26 @@ def solve_maze(
     if encircled_exit(grid, start) or encircled_exit(grid, finish):
         return grid, None
 
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
-            if grid[x][y] == " " or grid[x][y] == "X":
-                grid[x][y] = 0
+    for row_idx, row in enumerate(grid):
+        for col_idx, _ in enumerate(row):
+            if grid[row_idx][col_idx] == " " or grid[row_idx][col_idx] == "X":
+                grid[row_idx][col_idx] = 0
 
-    sx, sy = start
-    fx, fy = finish
-    grid[sx][sy] = 1
-    grid[fx][fy] = 0
+    start_row, start_col = start
+    finish_row, finish_col = finish
+    grid[start_row][start_col] = 1
+    grid[finish_row][finish_col] = 0
     k = 1
 
-    while grid[fx][fy] == 0:
+    while grid[finish_row][finish_col] == 0:
         if not make_step(grid, k):
             return grid, None
         k += 1
 
-    if grid[fx][fy] == 0:
+    if grid[finish_row][finish_col] == 0:
         return grid, None
 
-    path = shortest_path(grid, (fx, fy))
+    path = shortest_path(grid, (finish_row, finish_col))
     return grid, path
 
 
